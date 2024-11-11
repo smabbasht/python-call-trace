@@ -13,6 +13,9 @@ class FlowNode:
         self.parents = []
         self.branch_merge_point = None
 
+    def __str__(self):
+        return f"{self.type} {self.label}"
+
     def add_child(self, child: "FlowNode"):
         if child not in self.children:
             self.children.append(child)
