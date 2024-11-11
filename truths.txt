@@ -1,0 +1,12 @@
+Functions: dict_keys(['validate_data', 'process_item', 'special_processing', 'normal_processing', 'main'])
+Visits: ['main', 'sort', 'process_item', 'validate_data', 'randint', 'print', 'print', 'print', 'print', 'special_processing', 'print', 'print', 'normal_processing', 'print', 'print']
+Functions: dict_keys(['filter_and_apply', 'analyze_combinations', 'main'])
+Visits: ['main', 'filter_and_apply', 'filter', 'list', 'print', 'print', 'analyze_combinations', 'combinations', 'sum', 'print']
+Functions: dict_keys(['generate_data_sets', 'analyze_data_set', 'compare_data_sets', 'main'])
+Visits: ['main', 'generate_data_sets', 'int', 'randint', 'range', 'append', 'set', 'enumerate', 'print', 'sorted', 'print', 'compare_data_sets', 'combinations', 'enumerate', 'set', 'set', 'intersection', 'len', 'items', 'print']
+Functions: dict_keys(['process_numbers', 'conditional_analysis', 'nested_loop_example', 'main'])
+Visits: ['main', 'process_numbers', 'print', 'conditional_analysis', 'print', 'print', 'print', 'print', 'print', 'nested_loop_example', 'len', 'range', 'len', 'range', 'print', 'print']
+Functions: dict_keys(['analyze_values', 'check_environment', 'conditional_operations', 'main'])
+Visits: ['main', 'analyze_values', 'print', 'print', 'check_environment', 'getenv', 'print', 'print', 'print', 'conditional_operations', 'round', 'print', 'pow', 'print', 'print']
+Functions: dict_keys(['animal_conversation', 'main', '__init__', 'speak'])
+Visits: ['main', 'Dog', 'Animal.__init__', 'Dog.__init__', '__init__', 'Cat', 'Animal.__init__', 'Cat.__init__', '__init__', 'animal_conversation', 'speak', 'print', 'speak', 'print']
