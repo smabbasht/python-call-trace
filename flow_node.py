@@ -18,3 +18,6 @@ class FlowNode:
             self.children.append(child)
         if self not in child.parents:
             child.parents.append(self)
+
+    def set_branch_merge_point(self, node: "FlowNode"):
+        self.branch_merge_point = node

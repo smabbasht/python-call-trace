@@ -91,15 +91,13 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
 
             func_def = self.functions[func_name]
             for stmt in func_def.body:
-                self.simulate_statement(stmt, branch_point)
+                self.simulate_statement(stmt)
 
             self.visited_calls.remove(call_signature)
 
         return func_node
 
-    def simulate_statement(
-        self, stmt: ast.AST, branch_point: Optional[FlowNode] = None
-    ):
+    def simulate_statement(self, stmt: ast.AST):
         """Simulate execution of a statement"""
         if isinstance(stmt, ast.If):
             self.simulate_if_statement(stmt)
@@ -124,27 +122,28 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
         prev_node = self.current_node
 
         # Process true branch
-        true_start = self.current_node
+        # true_start = self.current_node
         for stmt in node.body:
-            self.simulate_statement(stmt, true_start)
+            self.simulate_statement(stmt)
         true_end = self.current_node
 
         # Process false branch
         self.current_node = prev_node
         if node.orelse:
             for stmt in node.orelse:
-                self.simulate_statement(stmt, true_start)
+                self.simulate_statement(stmt)
 
         # Create merge point if needed
-        if true_end.branch_merge_point:
-            self.current_node = true_end.branch_merge_point
-        else:
-            merge_node = self.create_node("MERGE", "Merge")
-            if self.current_node != merge_node:
-                self.current_node.add_child(merge_node)
-            if true_end != merge_node:
-                true_end.add_child(merge_node)
-            self.current_node = merge_node
+        if true_end is not None:
+            if true_end.branch_merge_point:
+                self.current_node = true_end.branch_merge_point
+            else:
+                merge_node = self.create_node("MERGE", "Merge")
+                if self.current_node != merge_node and self.current_node is not None:
+                    self.current_node.add_child(merge_node)
+                if true_end != merge_node:
+                    true_end.add_child(merge_node)
+                self.current_node = merge_node
 
     def simulate_call(self, node: ast.Call):
         """Simulate a function call and its arguments"""
