@@ -4,9 +4,8 @@ from graphing import GraphBuilder
 
 
 def main():
-    input_file = "input/test1.py"
-    # input_file = "input/sample_program_enhanced.py"
-    output_file = "output/execution_flow_graph.png"
+    input_file = "input/test_5.py"
+    output_file = f"output/{input_file.split('/')[-1].split('.')[0]}"
 
     analyzer = ExecutionFlowAnalyzer()
 

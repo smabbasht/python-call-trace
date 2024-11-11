@@ -1,0 +1,35 @@
+// Execution Flow Graph
+digraph {
+	rankdir=TB
+	"786bc3f0-7c72-47f6-a6f5-1c2f5a4ac001" [label="Program Start" fillcolor=lightgreen shape=ellipse style=filled]
+	"786bc3f0-7c72-47f6-a6f5-1c2f5a4ac001" -> "cd9697ee-3229-4ca8-91be-9a4a14495866"
+	"cd9697ee-3229-4ca8-91be-9a4a14495866" [label=main fillcolor=lightblue shape=box style=filled]
+	"cd9697ee-3229-4ca8-91be-9a4a14495866" -> "fd2eee6a-6c99-4270-aaee-77e96e73629c"
+	"fd2eee6a-6c99-4270-aaee-77e96e73629c" [label=filter_and_apply fillcolor=lightblue shape=box style=filled]
+	"fd2eee6a-6c99-4270-aaee-77e96e73629c" -> "7eb79ae5-153a-4bf1-9e7a-22c27ebcbae9"
+	"7eb79ae5-153a-4bf1-9e7a-22c27ebcbae9" [label=lambda fillcolor=lightblue shape=box style=filled]
+	"7eb79ae5-153a-4bf1-9e7a-22c27ebcbae9" -> "4486520c-35fc-4bf0-bf50-7e766c110332"
+	"4486520c-35fc-4bf0-bf50-7e766c110332" [label=filter fillcolor=lightblue shape=box style=filled]
+	"4486520c-35fc-4bf0-bf50-7e766c110332" -> "a3b47b2e-85dc-4a2e-9c22-15888c3ffc6a"
+	"a3b47b2e-85dc-4a2e-9c22-15888c3ffc6a" [label=list fillcolor=lightblue shape=box style=filled]
+	"a3b47b2e-85dc-4a2e-9c22-15888c3ffc6a" -> "65bb2b2d-da5b-4369-8d3f-9a085365731e"
+	"65bb2b2d-da5b-4369-8d3f-9a085365731e" [label=lambda fillcolor=lightblue shape=box style=filled]
+	"65bb2b2d-da5b-4369-8d3f-9a085365731e" -> "34eeab53-b61f-4869-9a18-1c45137d0c07"
+	"34eeab53-b61f-4869-9a18-1c45137d0c07" [label=zip fillcolor=lightblue shape=box style=filled]
+	"34eeab53-b61f-4869-9a18-1c45137d0c07" -> "70a9e96e-f46c-48ad-b7f1-850e9448adb4"
+	"70a9e96e-f46c-48ad-b7f1-850e9448adb4" [label=func fillcolor=lightblue shape=box style=filled]
+	"70a9e96e-f46c-48ad-b7f1-850e9448adb4" -> "1e8a0319-45a1-4c8a-bc28-a251c860ac1a"
+	"1e8a0319-45a1-4c8a-bc28-a251c860ac1a" [label=print fillcolor=lightblue shape=box style=filled]
+	"1e8a0319-45a1-4c8a-bc28-a251c860ac1a" -> "e5bebe62-32ca-4cee-8409-2852ea877be7"
+	"e5bebe62-32ca-4cee-8409-2852ea877be7" [label=print fillcolor=lightblue shape=box style=filled]
+	"e5bebe62-32ca-4cee-8409-2852ea877be7" -> "ab9368cb-3c89-472e-8b5d-e65f99ea74b2"
+	"ab9368cb-3c89-472e-8b5d-e65f99ea74b2" [label=analyze_combinations fillcolor=lightblue shape=box style=filled]
+	"ab9368cb-3c89-472e-8b5d-e65f99ea74b2" -> "d504d17f-6fcd-4b00-8831-d561630dd94b"
+	"d504d17f-6fcd-4b00-8831-d561630dd94b" [label=combinations fillcolor=lightblue shape=box style=filled]
+	"d504d17f-6fcd-4b00-8831-d561630dd94b" -> "1dccf0f3-9f59-4720-8748-4efc5040587e"
+	"1dccf0f3-9f59-4720-8748-4efc5040587e" [label=sum fillcolor=lightblue shape=box style=filled]
+	"1dccf0f3-9f59-4720-8748-4efc5040587e" -> "743167a5-b841-47fe-b8b7-62e7b9f5569d"
+	"743167a5-b841-47fe-b8b7-62e7b9f5569d" [label=print fillcolor=lightblue shape=box style=filled]
+	"743167a5-b841-47fe-b8b7-62e7b9f5569d" -> "0f0f3f6d-f984-4332-8eab-c6abd46027a5"
+	"0f0f3f6d-f984-4332-8eab-c6abd46027a5" [label="Program Exit" fillcolor=lightgreen shape=ellipse style=filled]
+}

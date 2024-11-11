@@ -63,9 +63,7 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
             elif isinstance(stmt.value, (ast.ListComp, ast.GeneratorExp)):
                 self.simulate_expression(stmt.value)
             else:
-                self.simulate_expression(
-                    stmt.value
-                )  # Added to handle other expressions
+                self.simulate_expression(stmt.value)
         elif isinstance(stmt, ast.Return):
             if isinstance(
                 stmt.value, (ast.Call, ast.ListComp, ast.GeneratorExp, ast.Dict)
@@ -84,7 +82,7 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
             self.simulate_expression(stmt.right)
         elif isinstance(stmt, ast.UnaryOp):
             self.simulate_expression(stmt.operand)
-        elif isinstance(stmt, ast.Lambda):  # Added to handle lambda expressions
+        elif isinstance(stmt, ast.Lambda):
             self.simulate_lambda(stmt)
 
     def simulate_call(self, node: ast.Call):
@@ -111,6 +109,7 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
 
     def simulate_expression(self, node: ast.AST):
         """Simulate an expression"""
+
         if isinstance(node, ast.Call):
             self.simulate_call(node)
         elif isinstance(node, ast.Attribute):
@@ -132,9 +131,35 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
             self.simulate_expression(node.test)
             self.simulate_expression(node.body)
             self.simulate_expression(node.orelse)
+        elif isinstance(node, ast.FormattedValue):
+            self.simulate_expression(node.value)
+            if node.format_spec:
+                self.simulate_expression(node.format_spec)
+        elif isinstance(node, ast.JoinedStr):
+            for value in node.values:
+                self.simulate_expression(value)
+        elif isinstance(node, ast.Constant):
+            pass
+        elif isinstance(node, ast.Subscript):
+            self.simulate_expression(node.value)
+            self.simulate_expression(node.slice)
+        elif isinstance(node, ast.Starred):
+            self.simulate_expression(node.value)
+        elif isinstance(node, (ast.List, ast.Tuple)):
+            for elt in node.elts:
+                self.simulate_expression(elt)
+        elif isinstance(node, ast.Slice):
+            if node.lower:
+                self.simulate_expression(node.lower)
+            if node.upper:
+                self.simulate_expression(node.upper)
+            if node.step:
+                self.simulate_expression(node.step)
 
     def simulate_lambda(self, node: ast.Lambda):
         """Simulate a lambda expression"""
+        self.create_node("FUNCTION", "lambda", node)
+        self.test_visits.append("lambda")
         self.simulate_expression(node.body)
 
     def simulate_function_call(
@@ -173,7 +198,7 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
         if isinstance(node.test, ast.Call):
             self.simulate_call(node.test)
         else:
-            self.simulate_expression(node.test)  # Added to handle complex conditions
+            self.simulate_expression(node.test)
 
         prev_node = self.current_node
 
@@ -207,7 +232,7 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
         elif isinstance(node.iter, (ast.ListComp, ast.GeneratorExp)):
             self.simulate_list_or_generator_expression(node.iter)
         else:
-            self.simulate_expression(node.iter)  # Added to handle complex iterables
+            self.simulate_expression(node.iter)
 
         for stmt in node.body:
             self.simulate_statement(stmt)

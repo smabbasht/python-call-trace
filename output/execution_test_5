@@ -1,0 +1,50 @@
+// Execution Flow Graph
+digraph {
+	rankdir=TB
+	"20b6d352-61f7-4cfa-87a8-5d9400583d71" [label="Program Start" fillcolor=lightgreen shape=ellipse style=filled]
+	"20b6d352-61f7-4cfa-87a8-5d9400583d71" -> "55e5479d-8854-4173-9e84-5159f5ffce91"
+	"55e5479d-8854-4173-9e84-5159f5ffce91" [label=main fillcolor=lightblue shape=box style=filled]
+	"55e5479d-8854-4173-9e84-5159f5ffce91" -> "1f0a8db4-be74-4039-9009-0b26b0928c5f"
+	"1f0a8db4-be74-4039-9009-0b26b0928c5f" [label=analyze_values fillcolor=lightblue shape=box style=filled]
+	"1f0a8db4-be74-4039-9009-0b26b0928c5f" -> "1d074886-69de-4048-af1d-740c1286c5ce"
+	"1d074886-69de-4048-af1d-740c1286c5ce" [label=abs fillcolor=lightblue shape=box style=filled]
+	"1d074886-69de-4048-af1d-740c1286c5ce" -> "f2326a14-e9ca-4eca-aefd-77b5eede4c9d"
+	"f2326a14-e9ca-4eca-aefd-77b5eede4c9d" [label=max fillcolor=lightblue shape=box style=filled]
+	"f2326a14-e9ca-4eca-aefd-77b5eede4c9d" -> "e444aaf1-f3fd-45a0-a683-08ee217fc80a"
+	"e444aaf1-f3fd-45a0-a683-08ee217fc80a" [label=min fillcolor=lightblue shape=box style=filled]
+	"e444aaf1-f3fd-45a0-a683-08ee217fc80a" -> "ec9f38da-5d0d-4823-9f2c-10a95848e676"
+	"ec9f38da-5d0d-4823-9f2c-10a95848e676" [label=print fillcolor=lightblue shape=box style=filled]
+	"ec9f38da-5d0d-4823-9f2c-10a95848e676" -> "8cfc9898-1153-40a7-94ca-64ea3cdf0838"
+	"8cfc9898-1153-40a7-94ca-64ea3cdf0838" [label=print fillcolor=lightblue shape=box style=filled]
+	"8cfc9898-1153-40a7-94ca-64ea3cdf0838" -> "cd143724-6798-47da-b15b-4b1e21ee02db"
+	"cd143724-6798-47da-b15b-4b1e21ee02db" [label=check_environment fillcolor=lightblue shape=box style=filled]
+	"cd143724-6798-47da-b15b-4b1e21ee02db" -> "22d8341c-b6fa-47f8-8816-9a29bd630e46"
+	"22d8341c-b6fa-47f8-8816-9a29bd630e46" [label=print fillcolor=lightblue shape=box style=filled]
+	"22d8341c-b6fa-47f8-8816-9a29bd630e46" -> "d7a44f8b-2a72-4b02-ab70-79b92dc7f9ea"
+	"d7a44f8b-2a72-4b02-ab70-79b92dc7f9ea" [label=print fillcolor=lightblue shape=box style=filled]
+	"d7a44f8b-2a72-4b02-ab70-79b92dc7f9ea" -> "9fc07e8a-062f-407b-b655-ecd79f827c6e"
+	"9fc07e8a-062f-407b-b655-ecd79f827c6e" [label=Merge fillcolor=lightgray shape=circle style=filled]
+	"9fc07e8a-062f-407b-b655-ecd79f827c6e" -> "990b0df0-8099-4061-88c3-a37016ff625c"
+	"990b0df0-8099-4061-88c3-a37016ff625c" [label=conditional_operations fillcolor=lightblue shape=box style=filled]
+	"990b0df0-8099-4061-88c3-a37016ff625c" -> "82d8761c-a733-4071-add2-f3c5c77e663c"
+	"82d8761c-a733-4071-add2-f3c5c77e663c" [label=round fillcolor=lightblue shape=box style=filled]
+	"82d8761c-a733-4071-add2-f3c5c77e663c" -> "8a7af5da-d0db-4f65-b76b-bc677646d933"
+	"8a7af5da-d0db-4f65-b76b-bc677646d933" [label=print fillcolor=lightblue shape=box style=filled]
+	"8a7af5da-d0db-4f65-b76b-bc677646d933" -> "804d5e8c-ca21-40b7-88e3-af440cd78af4"
+	"804d5e8c-ca21-40b7-88e3-af440cd78af4" [label=Merge fillcolor=lightgray shape=circle style=filled]
+	"804d5e8c-ca21-40b7-88e3-af440cd78af4" -> "836590f6-b015-43d2-ba48-9580a13220b4"
+	"836590f6-b015-43d2-ba48-9580a13220b4" [label="Program Exit" fillcolor=lightgreen shape=ellipse style=filled]
+	"990b0df0-8099-4061-88c3-a37016ff625c" -> "99b3b17f-3d9c-4af2-b12a-f0385a12978c"
+	"99b3b17f-3d9c-4af2-b12a-f0385a12978c" [label=pow fillcolor=lightblue shape=box style=filled]
+	"99b3b17f-3d9c-4af2-b12a-f0385a12978c" -> "18f4ffed-af07-4479-9591-889a9e5a1fcb"
+	"18f4ffed-af07-4479-9591-889a9e5a1fcb" [label=print fillcolor=lightblue shape=box style=filled]
+	"18f4ffed-af07-4479-9591-889a9e5a1fcb" -> "4a76a08f-0827-4d9f-9533-8a85d312b746"
+	"4a76a08f-0827-4d9f-9533-8a85d312b746" [label=Merge fillcolor=lightgray shape=circle style=filled]
+	"4a76a08f-0827-4d9f-9533-8a85d312b746" -> "804d5e8c-ca21-40b7-88e3-af440cd78af4"
+	"990b0df0-8099-4061-88c3-a37016ff625c" -> "f673489e-398d-42ca-9768-db8777b2e8df"
+	"f673489e-398d-42ca-9768-db8777b2e8df" [label=print fillcolor=lightblue shape=box style=filled]
+	"f673489e-398d-42ca-9768-db8777b2e8df" -> "4a76a08f-0827-4d9f-9533-8a85d312b746"
+	"22d8341c-b6fa-47f8-8816-9a29bd630e46" -> "d8903ef0-6c30-4583-8788-b7a0145d1455"
+	"d8903ef0-6c30-4583-8788-b7a0145d1455" [label=print fillcolor=lightblue shape=box style=filled]
+	"d8903ef0-6c30-4583-8788-b7a0145d1455" -> "9fc07e8a-062f-407b-b655-ecd79f827c6e"
+}

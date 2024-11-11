@@ -1,5 +1,3 @@
-# sample_program_enhanced.py
-# main(), process_item(), validate_data(), special_processing(), normal_processing()
 from random import randint
 
 
