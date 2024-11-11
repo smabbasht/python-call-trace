@@ -5,15 +5,15 @@ from flow_node import FlowNode
 
 class ExecutionFlowAnalyzer(ast.NodeVisitor):
     def __init__(self):
-        self.functions: Dict[str, ast.FunctionDef] = {}
+        self.function_defs: Dict[str, ast.FunctionDef] = {}
         self.current_node = None
         self.entry_node = None
         self.end_node = None
         self.visited_calls: Set[str] = set()
-        self.test_visits: List[str] = list()
+        self.visit_log: List[str] = list()
 
     def __str__(self):
-        return f"Functions: {self.functions.keys()}, Visits: {self.test_visits}"
+        return f"Functions: {self.function_defs.keys()}, Visits: {self.visit_log}"
 
     def create_node(
         self, node_type: str, label: str, ast_node: Optional[ast.AST] = None
@@ -32,10 +32,11 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
         # First pass: collect all function definitions
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef):
-                self.functions[node.name] = node
+                self.function_defs[node.name] = node
+            # self.simulate_expression(node)
 
         # Start execution from main
-        if "main" in self.functions:
+        if "main" in self.function_defs:
             self.entry_node = self.create_node("ENTRY", "Program Start")
             self.simulate_function_call("main")
 
@@ -105,7 +106,7 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
         self.simulate_expression(node.value)
         if isinstance(node.value, ast.Call):
             self.simulate_call(node.value)
-        self.test_visits.append(node.attr)
+        self.visit_log.append(node.attr)
 
     def simulate_expression(self, node: ast.AST):
         """Simulate an expression"""
@@ -159,7 +160,7 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
     def simulate_lambda(self, node: ast.Lambda):
         """Simulate a lambda expression"""
         self.create_node("FUNCTION", "lambda", node)
-        self.test_visits.append("lambda")
+        self.visit_log.append("lambda")
         self.simulate_expression(node.body)
 
     def simulate_function_call(
@@ -169,10 +170,10 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
         # Create a unique call signature to handle recursive calls
         call_signature = f"{func_name}_{id(branch_point)}"
 
-        if func_name not in self.functions:
+        if func_name not in self.function_defs:
             # Handle built-in functions like print()
             call_node = self.create_node("FUNCTION", f"{func_name}")
-            self.test_visits.append(func_name)
+            self.visit_log.append(func_name)
             if branch_point:
                 branch_point.branch_merge_point = call_node
             return call_node
@@ -183,9 +184,9 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
         # Process function body if we haven't seen this exact call before
         if call_signature not in self.visited_calls:
             self.visited_calls.add(call_signature)
-            self.test_visits.append(func_name)
+            self.visit_log.append(func_name)
 
-            func_def = self.functions[func_name]
+            func_def = self.function_defs[func_name]
             for stmt in func_def.body:
                 self.simulate_statement(stmt)
 
