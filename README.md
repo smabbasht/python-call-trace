@@ -39,3 +39,14 @@ python main.py
 
 ### Assumptions:
 - The tool expects input source file to have an entry point `main()` function.
+
+### Graphs:
+There are sample inputs and outputs in the `input/` and `output/` directory, For a glimpse, I am attaching some of them here. <br>
+*Click to see the images.*
+
+
+|<img width="300" height="1000" alt="test_1" src="./output/test_1.png"> | <img width="300" height="1000" alt="test_3" src="./output/test_5.png">  |  <img width="300" height="1000" alt="test_2" src="./output/test_4.png">|
+|:-----------------:|:-----------------:|:----------------:|
+
+### Authors:
+- **Syed M. Abbas Haider Taqvi** - [@smabbasht](https://www.github.com/smabbasht)
