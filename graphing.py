@@ -1,4 +1,4 @@
-from flow_analyzer import ExecutionFlowAnalyzer
+from python_call_trace import PythonCallTrace
 from flow_node import FlowNode
 from graphviz import Digraph
 
@@ -7,7 +7,7 @@ class GraphBuilder:
     def __init__(
         self,
         comment: str,
-        flow_analyzer: ExecutionFlowAnalyzer,
+        flow_analyzer: PythonCallTrace,
     ):
         self.dot = Digraph(comment=comment)
         self.flow_analyzer = flow_analyzer

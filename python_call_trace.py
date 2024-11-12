@@ -3,7 +3,7 @@ from typing import Optional, Dict, Set, List
 from flow_node import FlowNode
 
 
-class ExecutionFlowAnalyzer(ast.NodeVisitor):
+class PythonCallTrace(ast.NodeVisitor):
     def __init__(self):
         self.function_defs: Dict[str, ast.FunctionDef] = {}
         self.class_defs: Dict[str, ast.ClassDef] = {}
@@ -110,6 +110,8 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
                 self.simulate_call(stmt.value)
             elif isinstance(stmt.value, (ast.ListComp, ast.GeneratorExp)):
                 self.simulate_expression(stmt.value)
+        elif isinstance(stmt, ast.While):
+            self.simulate_while_loop(stmt)
         elif isinstance(stmt, ast.For):
             self.simulate_for_loop(stmt)
         elif isinstance(stmt, ast.Assign):
@@ -222,8 +224,19 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
                     true_end.add_child(merge_node)
                 self.current_node = merge_node
 
+    def simulate_while_loop(self, node: ast.While):
+        """Simulate a for loop execution"""
+        self.create_node("LOOP", "Start Loop", node)
+        self.visit_log.append("Start Loop")
+        for stmt in node.body:
+            self.simulate_statement(stmt)
+        self.visit_log.append("End Loop")
+        self.create_node("LOOP", "End Loop", node)
+
     def simulate_for_loop(self, node: ast.For):
         """Simulate a for loop execution"""
+        self.create_node("LOOP", "Start Loop", node)
+        self.visit_log.append("Start Loop")
         if isinstance(node.iter, ast.Call):
             self.simulate_call(node.iter)
         elif isinstance(node.iter, (ast.ListComp, ast.GeneratorExp)):
@@ -233,6 +246,8 @@ class ExecutionFlowAnalyzer(ast.NodeVisitor):
 
         for stmt in node.body:
             self.simulate_statement(stmt)
+        self.visit_log.append("End Loop")
+        self.create_node("LOOP", "End Loop", node)
 
     def simulate_list_or_generator_expression(
         self, node: ast.ListComp | ast.GeneratorExp

@@ -1,4 +1,4 @@
-from flow_analyzer import ExecutionFlowAnalyzer
+from python_call_trace import PythonCallTrace
 
 
 def test_file_1():
@@ -9,7 +9,7 @@ def test_file_1():
     truths = open("truths.txt", "r").readlines()
     truth = truths[i_th].strip() + "\n" + truths[i_th + 1].strip()
 
-    analyzer = ExecutionFlowAnalyzer()
+    analyzer = PythonCallTrace()
     analyzer.analyze_file(input_file)
 
     assert str(analyzer) == truth
@@ -23,7 +23,7 @@ def test_file_2():
     truths = open("truths.txt", "r").readlines()
     truth = truths[i_th].strip() + "\n" + truths[i_th + 1].strip()
 
-    analyzer = ExecutionFlowAnalyzer()
+    analyzer = PythonCallTrace()
     analyzer.analyze_file(input_file)
 
     assert str(analyzer) == truth
@@ -37,7 +37,7 @@ def test_file_3():
     truths = open("truths.txt", "r").readlines()
     truth = truths[i_th].strip() + "\n" + truths[i_th + 1].strip()
 
-    analyzer = ExecutionFlowAnalyzer()
+    analyzer = PythonCallTrace()
     analyzer.analyze_file(input_file)
 
     assert str(analyzer) == truth
@@ -51,7 +51,7 @@ def test_file_4():
     truths = open("truths.txt", "r").readlines()
     truth = truths[i_th].strip() + "\n" + truths[i_th + 1].strip()
 
-    analyzer = ExecutionFlowAnalyzer()
+    analyzer = PythonCallTrace()
     analyzer.analyze_file(input_file)
 
     assert str(analyzer) == truth
@@ -65,7 +65,7 @@ def test_file_5():
     truths = open("truths.txt", "r").readlines()
     truth = truths[i_th].strip() + "\n" + truths[i_th + 1].strip()
 
-    analyzer = ExecutionFlowAnalyzer()
+    analyzer = PythonCallTrace()
     analyzer.analyze_file(input_file)
 
     assert str(analyzer) == truth
@@ -79,7 +79,7 @@ def test_file_6():
     truths = open("truths.txt", "r").readlines()
     truth = truths[i_th].strip() + "\n" + truths[i_th + 1].strip()
 
-    analyzer = ExecutionFlowAnalyzer()
+    analyzer = PythonCallTrace()
     analyzer.analyze_file(input_file)
 
     print(analyzer)
