@@ -5,13 +5,15 @@ from flow_node import FlowNode
 
 class PythonCallTrace(ast.NodeVisitor):
     def __init__(self):
-        self.function_defs: Dict[str, ast.FunctionDef] = {}
-        self.class_defs: Dict[str, ast.ClassDef] = {}
+        self.function_defs: Dict[
+            str, ast.FunctionDef
+        ] = {}  # Track function definitions
+        self.class_defs: Dict[str, ast.ClassDef] = {}  # Track class definitions
         self.current_node = None
         self.entry_node = None
         self.end_node = None
-        self.visited_calls: Set[str] = set()
-        self.visit_log: List[str] = list()
+        self.visited_calls: Set[str] = set()  # Track pending function calls
+        self.visit_log: List[str] = list()  # Persistent visit_log for testing
         self.in_super_call = False  # Track if we're inside a super() call
 
     def __str__(self):
@@ -20,13 +22,29 @@ class PythonCallTrace(ast.NodeVisitor):
     def create_node(
         self, node_type: str, label: str, ast_node: Optional[ast.AST] = None
     ) -> FlowNode:
+        """Create a new flow node"""
         node = FlowNode(node_type, label, ast_node)
+
+        # If self.current_node is initialized, add the new node as a child
         if self.current_node:
             self.current_node.add_child(node)
         self.current_node = node
         return node
 
     def analyze_file(self, file_path: str) -> tuple[FlowNode, FlowNode]:
+        """
+        Analyze the given Python file to trace function and class definitions,
+        and simulate the execution starting from the 'main' function.
+
+        Args:
+            file_path (str): The path to the Python file to be analyzed.
+
+        Returns:
+            tuple[FlowNode, FlowNode]: The entry and end nodes of the simulated execution flow.
+
+        Raises:
+            ValueError: If no entry or end node is found.
+        """
         with open(file_path, "r") as file:
             tree = ast.parse(file.read())
 
@@ -48,6 +66,7 @@ class PythonCallTrace(ast.NodeVisitor):
         return self.entry_node, self.end_node
 
     def get_base_classes(self, class_name: str) -> List[str]:
+        """Get the base classes of a given class for super() calls"""
         if class_name in self.class_defs:
             class_def = self.class_defs[class_name]
             return [base.id for base in class_def.bases if isinstance(base, ast.Name)]
@@ -150,7 +169,7 @@ class PythonCallTrace(ast.NodeVisitor):
             elif isinstance(node, ast.FormattedValue):
                 self.simulate_expression(node.value)
         elif isinstance(node, ast.Name):
-            pass  # Skip name nodes to avoid unnecessary logging
+            pass  # Skip to avoid logging variable names
 
     def simulate_function_call(
         self, func_name: str, branch_point: Optional[FlowNode] = None
