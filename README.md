@@ -1,7 +1,7 @@
 ## Python Call Trace
 
 This is a tool that captures the order in which the functions may be called in
-an actual execution of a python file. 
+an actual execution of a python file using an Abstract Syntax Tree (AST).
 It takes an input a python file and produces an output graph as an image.
 
 ### Usage: 
