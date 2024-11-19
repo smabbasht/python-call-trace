@@ -129,10 +129,8 @@ class PythonCallTrace(ast.NodeVisitor):
                 self.simulate_call(stmt.value)
             elif isinstance(stmt.value, (ast.ListComp, ast.GeneratorExp)):
                 self.simulate_expression(stmt.value)
-        elif isinstance(stmt, ast.While):
-            self.simulate_while_loop(stmt)
-        elif isinstance(stmt, ast.For):
-            self.simulate_for_loop(stmt)
+        elif isinstance(stmt, (ast.For, ast.While)):
+            self.simulate_loop(stmt)
         elif isinstance(stmt, ast.Assign):
             if isinstance(stmt.value, ast.Call):
                 self.simulate_call(stmt.value)
@@ -236,37 +234,34 @@ class PythonCallTrace(ast.NodeVisitor):
             if true_end.branch_merge_point:
                 self.current_node = true_end.branch_merge_point
             else:
-                merge_node = self.create_node("MERGE", "Merge")
+                merge_node = self.create_node("MERGE", "Merge Conditional")
                 if self.current_node != merge_node and self.current_node is not None:
                     self.current_node.add_child(merge_node)
                 if true_end != merge_node:
                     true_end.add_child(merge_node)
                 self.current_node = merge_node
 
-    def simulate_while_loop(self, node: ast.While):
-        """Simulate a for loop execution"""
-        self.create_node("LOOP", "Start Loop", node)
-        self.visit_log.append("Start Loop")
+    def simulate_loop(self, node: ast.For | ast.While):
+        """Simulate a for loop execution as a branch."""
+        # Backup the current node as the branch point
+        branch_node = self.current_node
+        
+        # Create loop entry node directly attached to the branch node
+        loop_entry = self.create_node('LOOP_START', 'Start of Loop', node)
+        if branch_node:
+            branch_node.add_child(loop_entry)
+        
+        # Set current node to the new loop entry and simulate the loop body
+        self.current_node = loop_entry
         for stmt in node.body:
             self.simulate_statement(stmt)
-        self.visit_log.append("End Loop")
-        self.create_node("LOOP", "End Loop", node)
-
-    def simulate_for_loop(self, node: ast.For):
-        """Simulate a for loop execution"""
-        self.create_node("LOOP", "Start Loop", node)
-        self.visit_log.append("Start Loop")
-        if isinstance(node.iter, ast.Call):
-            self.simulate_call(node.iter)
-        elif isinstance(node.iter, (ast.ListComp, ast.GeneratorExp)):
-            self.simulate_list_or_generator_expression(node.iter)
-        else:
-            self.simulate_expression(node.iter)
-
-        for stmt in node.body:
-            self.simulate_statement(stmt)
-        self.visit_log.append("End Loop")
-        self.create_node("LOOP", "End Loop", node)
+        
+        loop_exit = self.create_node('LOOP_END', 'End of Loop', node)
+        merge_node = self.create_node('MERGE', 'Merge Loop')
+        merge_node.branch_merge_point = loop_exit
+        
+        if branch_node:
+            branch_node.add_child(merge_node)
 
     def simulate_list_or_generator_expression(
         self, node: ast.ListComp | ast.GeneratorExp

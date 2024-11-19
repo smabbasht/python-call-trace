@@ -36,6 +36,7 @@ Now your virtual environment is ready. You can run the program by:
 ```python 
 python main.py 
 ```
+If you encounter errors related to `graphviz` or `dot`, you may need to install [graphviz](https://formulae.brew.sh/formula/graphviz).
 
 ### Assumptions:
 - The tool expects input source file to have an entry point `main()` function.

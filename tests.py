@@ -86,3 +86,5 @@ def test_file_6():
     print(truth)
 
     assert str(analyzer) == truth
+
+

@@ -34,7 +34,7 @@ class GraphBuilder:
             },
             "CALL": {"shape": "box", "style": "filled", "fillcolor": "lightpink"},
             "MERGE": {
-                "shape": "circle",
+                "shape": "ellipse",
                 "style": "filled",
                 "fillcolor": "lightgray",
             },
