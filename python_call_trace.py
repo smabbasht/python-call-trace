@@ -2,12 +2,9 @@ import ast
 from typing import Optional, Dict, Set, List
 from flow_node import FlowNode
 
-
 class PythonCallTrace(ast.NodeVisitor):
     def __init__(self):
-        self.function_defs: Dict[
-            str, ast.FunctionDef
-        ] = {}  # Track function definitions
+        self.function_defs: Dict[str, ast.FunctionDef] = {}  # Track function definitions
         self.class_defs: Dict[str, ast.ClassDef] = {}  # Track class definitions
         self.current_node = None
         self.entry_node = None
@@ -19,32 +16,17 @@ class PythonCallTrace(ast.NodeVisitor):
     def __str__(self):
         return f"Functions: {self.function_defs.keys()}\nVisits: {self.visit_log}"
 
-    def create_node(
-        self, node_type: str, label: str, ast_node: Optional[ast.AST] = None
-    ) -> FlowNode:
+    def create_node(self, node_type: str, label: str, ast_node: Optional[ast.AST] = None) -> FlowNode:
         """Create a new flow node"""
         node = FlowNode(node_type, label, ast_node)
-
-        # If self.current_node is initialized, add the new node as a child
         if self.current_node:
             self.current_node.add_child(node)
         self.current_node = node
         return node
 
     def analyze_file(self, file_path: str) -> tuple[FlowNode, FlowNode]:
-        """
-        Analyze the given Python file to trace function and class definitions,
-        and simulate the execution starting from the 'main' function.
-
-        Args:
-            file_path (str): The path to the Python file to be analyzed.
-
-        Returns:
-            tuple[FlowNode, FlowNode]: The entry and end nodes of the simulated execution flow.
-
-        Raises:
-            ValueError: If no entry or end node is found.
-        """
+        """Analyze the given Python file to trace function and class definitions,
+        and simulate the execution starting from the 'main' function."""
         with open(file_path, "r") as file:
             tree = ast.parse(file.read())
 
@@ -78,9 +60,7 @@ class PythonCallTrace(ast.NodeVisitor):
         is_super_call = (
             isinstance(node.func, ast.Name) and node.func.id == "super"
         ) or (
-            isinstance(node.func, ast.Attribute)
-            and isinstance(node.func.value, ast.Name)
-            and node.func.value.id == "super"
+            isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name) and node.func.value.id == "super"
         )
 
         # Skip logging super() calls
@@ -175,10 +155,7 @@ class PythonCallTrace(ast.NodeVisitor):
         """Simulate execution of a function, including all nested calls"""
         call_signature = f"{func_name}_{id(branch_point)}"
 
-        if (
-            not func_name.endswith(".__init__")
-            or call_signature not in self.visited_calls
-        ):
+        if ( not func_name.endswith(".__init__") or call_signature not in self.visited_calls):
             self.visit_log.append(func_name)
 
         func_node = self.create_node("FUNCTION", f"{func_name}")
@@ -209,59 +186,52 @@ class PythonCallTrace(ast.NodeVisitor):
 
         return func_node
 
-    def simulate_if_statement(self, node: ast.If):
-        """Simulate an if statement execution"""
-        if isinstance(node.test, ast.Call):
-            self.simulate_call(node.test)
-        else:
-            self.simulate_expression(node.test)
+    def trim_text(self, text: str, n: int) -> str:
+        """Trim text to a maximum of 20 characters."""
+        if len(text) > n:
+            return text[:n] + '...'
+        return text
 
-        prev_node = self.current_node
+    def simulate_if_statement(self, node: ast.If):
+        """Simulate an if statement as a branch with condition."""
+        condition_text = self.trim_text(f"if {ast.unparse(node.test)}:", 15)
+        condition_node = self.create_node('CONDITION', condition_text, node)
 
         # Process true branch
         for stmt in node.body:
             self.simulate_statement(stmt)
-        true_end = self.current_node
+        end_true_branch = self.current_node
 
-        # Process false branch
-        self.current_node = prev_node
-        if node.orelse:
-            for stmt in node.orelse:
-                self.simulate_statement(stmt)
+        # Reset to condition node for the false branch
+        self.current_node = condition_node
+        for stmt in node.orelse:
+            self.simulate_statement(stmt)
+        end_false_branch = self.current_node
 
-        # Create merge point if needed
-        if true_end is not None:
-            if true_end.branch_merge_point:
-                self.current_node = true_end.branch_merge_point
-            else:
-                merge_node = self.create_node("MERGE", "Merge Conditional")
-                if self.current_node != merge_node and self.current_node is not None:
-                    self.current_node.add_child(merge_node)
-                if true_end != merge_node:
-                    true_end.add_child(merge_node)
-                self.current_node = merge_node
+        # Create a merge node that both branches connect to
+        merge_node = self.create_node('END_IF', 'End Conditional', node)
+        if end_true_branch:
+            end_true_branch.add_child(merge_node)
+        if end_false_branch:
+            end_false_branch.add_child(merge_node)
+        self.current_node = merge_node
 
     def simulate_loop(self, node: ast.For | ast.While):
-        """Simulate a for loop execution as a branch."""
-        # Backup the current node as the branch point
-        branch_node = self.current_node
-        
-        # Create loop entry node directly attached to the branch node
-        loop_entry = self.create_node('LOOP_START', 'Start of Loop', node)
-        if branch_node:
-            branch_node.add_child(loop_entry)
-        
-        # Set current node to the new loop entry and simulate the loop body
-        self.current_node = loop_entry
+        """Simulate a loop execution as a branch with cyclic paths."""
+        # Create a loop entry node with loop condition as label
+        if isinstance(node, ast.For):
+            loop_text = self.trim_text(f"for {' '.join(ast.unparse(node.target).split())} in {' '.join(ast.unparse(node.iter).split())}:", 25)
+        else:  # ast.While
+            loop_text = self.trim_text(f"while {' '.join(ast.unparse(node.test).split())}:", 25)
+        loop_entry = self.create_node('LOOP_START', loop_text, node)
+
+        # Simulate the loop body
         for stmt in node.body:
             self.simulate_statement(stmt)
-        
-        loop_exit = self.create_node('LOOP_END', 'End of Loop', node)
-        merge_node = self.create_node('MERGE', 'Merge Loop')
-        merge_node.branch_merge_point = loop_exit
-        
-        if branch_node:
-            branch_node.add_child(merge_node)
+
+        if self.current_node:
+            self.current_node.add_child(loop_entry)
+            self.current_node = loop_entry
 
     def simulate_list_or_generator_expression(
         self, node: ast.ListComp | ast.GeneratorExp

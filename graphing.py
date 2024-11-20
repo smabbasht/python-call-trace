@@ -33,6 +33,26 @@ class GraphBuilder:
                 "fillcolor": "lightblue",
             },
             "CALL": {"shape": "box", "style": "filled", "fillcolor": "lightpink"},
+            "LOOP": {
+                "shape": "ellipse",
+                "style": "filled",
+                "fillcolor": "lightgray",
+            },
+            "CONDITION": {
+                "shape": "diamond",
+                "style": "filled",
+                "fillcolor": "lightgray",
+            },
+            "END_IF": {
+                "shape": "Mdiamond",
+                "style": "filled",
+                "fillcolor": "white",
+            },
+            "END_LOOP": {
+                "shape": "Msquare",
+                "style": "filled",
+                "fillcolor": "white",
+            },
             "MERGE": {
                 "shape": "ellipse",
                 "style": "filled",

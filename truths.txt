@@ -1,5 +1,5 @@
 Functions: dict_keys(['validate_data', 'process_item', 'special_processing', 'normal_processing', 'main'])
-Visits: ['main', 'sort', 'process_item', 'validate_data', 'randint', 'print', 'print', 'print', 'print', 'special_processing', 'print', 'print', 'normal_processing', 'print', 'print']
+Visits: ['main', 'sort', 'process_item', 'print', 'special_processing', 'print', 'print', 'normal_processing', 'print', 'print']
 Functions: dict_keys(['filter_and_apply', 'analyze_combinations', 'main'])
 Visits: ['main', 'filter_and_apply', 'filter', 'list', 'print', 'print', 'analyze_combinations', 'sum', 'print']
 Functions: dict_keys(['generate_data_sets', 'analyze_data_set', 'compare_data_sets', 'main'])

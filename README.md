@@ -6,14 +6,19 @@ It takes an input a python file and produces an output graph as an image.
 
 ### Usage: 
 
-#### Quick Usage Guide:
-> If you have a python environment setup, you can run the following command
-> ```python 
-> pip install -r requirements.txt
-> python main.py 
-> ```
+<details>
+<summary> Quick Usage Guide: </summary> <br>
+If you have a python environment setup, you can run the following command
 
-#### Detailed Usage Guide:
+```bash
+pip install -r requirements.txt
+python main.py 
+```
+
+</details>
+
+<details>
+<summary> Detailed Usage Guide: </summary> <br>
 In order to use this program, you must have python installed. It is also
 recommended to use python in a virtual environment.
 
@@ -37,9 +42,16 @@ Now your virtual environment is ready. You can run the program by:
 python main.py 
 ```
 If you encounter errors related to `graphviz` or `dot`, you may need to install [graphviz](https://formulae.brew.sh/formula/graphviz).
+</details>
 
-### Assumptions:
+### Assumptions and Design Decisions:
 - The tool expects input source file to have an entry point `main()` function.
+- Each loops body is in a branch, since loops essentially expose the control
+  flow to a conditional which if true, results in execution of body and if
+  false results passes the control flow to rest of the source code.
+- As there are no `do_while` kind of loops in python so we can assume a loop
+  always breaks off from the loop condition which is why the rest of the
+  execution starts from the base of the loop in graphs.
 
 ### Graphs:
 There are sample inputs and outputs in the `input/` and `output/` directory, For a glimpse, I am attaching some of them here. <br>
